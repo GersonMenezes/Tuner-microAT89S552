@@ -1,0 +1,192 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              09/05/2023 17:25:05 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\Main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE Main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\Main
+                    -.lst) TABS(2) OBJECT(.\Objects\Main.obj)
+
+line level    source
+
+   1          #include <at89x52.h>
+   2          #include <string.h>
+   3          
+   4          #define CS      P1_0
+   5          #define CLK     P1_1
+   6          #define DO      P1_2
+   7          #define LCD     P2
+   8          #define EN      P3_6
+   9          #define RS      P3_7
+  10          
+  11          void ConfigLCD(void);
+  12          void Line1(void);
+  13          void Line2(void);
+  14          void WrSTR(char msg[]);
+  15          void delay_us(int us);
+  16          void delay_ms(int ms);
+  17          void WrCMD(void);
+  18          void WrCHAR(void);
+  19          void WrNUM(float num);
+  20          unsigned char ReadADC(void);
+  21          
+  22          void main(void)
+  23          {
+  24   1        unsigned char VD = 0;
+  25   1        float VA = 0;
+  26   1        CS = 1;
+  27   1        
+  28   1        ConfigLCD();
+  29   1        Line1();
+  30   1        WrSTR("Tensao lida [V]:");
+  31   1        Line2();
+  32   1        
+  33   1        while(1){
+  34   2          VD = ReadADC();
+  35   2          P0 = VD;
+  36   2          VA = 5*VD/255;     // 2^b - 1
+  37   2          delay_ms(250);
+  38   2          WrNUM(VA);
+  39   2        }
+  40   1      }
+  41          
+  42          void ConfigLCD(void)
+  43          {
+  44   1        LCD = 0x38;
+  45   1        WrCMD();
+  46   1        LCD = 0x06;
+  47   1        WrCMD();
+  48   1        LCD = 0x0E;
+  49   1        WrCMD();
+  50   1        LCD = 0x01;
+  51   1        WrCMD();
+  52   1      }
+  53          
+  54          void Line1(void)
+C51 COMPILER V9.60.7.0   MAIN                                                              09/05/2023 17:25:05 PAGE 2   
+
+  55          { 
+  56   1        LCD = 0x00;
+  57   1        WrCMD();
+  58   1      }
+  59          
+  60          void Line2(void)
+  61          {
+  62   1        LCD = 0xC0;
+  63   1        WrCMD();
+  64   1      }
+  65          
+  66          void WrSTR(char msg[])
+  67          {
+  68   1        unsigned char i, L;
+  69   1        L = strlen(msg);
+  70   1        for(i = 0; i < L; i++)
+  71   1        {
+  72   2          LCD = msg[i];
+  73   2          WrCHAR();
+  74   2        }
+  75   1      }
+  76          
+  77          void WrNUM(float num)
+  78          {
+  79   1          unsigned char c = 0, d = 0, u = 0;
+  80   1      
+  81   1          num = num*100;
+  82   1          
+  83   1          c = num / 100;
+  84   1        
+  85   1          num = num - 100*c;
+  86   1          d = num / 10;
+  87   1          num = num - 10*d;
+  88   1          u = num;
+  89   1        
+  90   1          c += 0x30;
+  91   1          d += 0x30;
+  92   1          u += 0x30;
+  93   1        
+  94   1          LCD = c;    
+  95   1          WrCHAR();
+  96   1          WrSTR(".");
+  97   1          LCD = d;    
+  98   1          WrCHAR();
+  99   1          LCD = u;    
+ 100   1          WrCHAR();
+ 101   1          LCD = 0xC0;     // Retorna para a primeira posi??o na escrita subsequente.
+ 102   1          WrCMD();
+ 103   1      }
+ 104          
+ 105          void delay_us(int us)
+ 106          {
+ 107   1        unsigned char i;
+ 108   1        for(i = 0; i < us; i++){}
+ 109   1      }
+ 110          
+ 111          void delay_ms(int ms){
+ 112   1        TMOD |= 0x01;
+ 113   1        
+ 114   1        while(ms){
+ 115   2          TL0 = 0x65;
+ 116   2          TH0 = 0xFC;
+C51 COMPILER V9.60.7.0   MAIN                                                              09/05/2023 17:25:05 PAGE 3   
+
+ 117   2          TR0 = 1;
+ 118   2          while(!TF0);
+ 119   2          TF0 = 0;
+ 120   2          TR0 = 0;
+ 121   2          ms--;
+ 122   2        }
+ 123   1      }
+ 124          
+ 125          void WrCMD(void)
+ 126          {
+ 127   1        RS = 0;
+ 128   1        EN = 1;
+ 129   1        delay_us(5);
+ 130   1        EN = 0;
+ 131   1        delay_ms(5);
+ 132   1      }
+ 133          
+ 134          void WrCHAR(void)
+ 135          {
+ 136   1        RS = 1;
+ 137   1        EN = 1;
+ 138   1        delay_us(5);
+ 139   1        EN = 0;
+ 140   1        delay_ms(5);
+ 141   1      }
+ 142          
+ 143          unsigned char ReadADC(void){
+ 144   1        unsigned char DATA = 0;
+ 145   1        int i;
+ 146   1        
+ 147   1        CS = 0;
+ 148   1        delay_us(10);
+ 149   1        CLK = 1;
+ 150   1        delay_us(10);
+ 151   1        for(i = 0; i < 9; i++){
+ 152   2          CLK = 0;
+ 153   2          delay_us(10);
+ 154   2          DATA = DATA << 1;
+ 155   2          if(DO){
+ 156   3            DATA++;
+ 157   3            // ou MY_DATA |= DO;
+ 158   3          } 
+ 159   2          CLK = 1; 
+ 160   2          delay_us(10);
+ 161   2        }
+ 162   1        CS = 1;
+ 163   1        return DATA;
+ 164   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    554    ----
+   CONSTANT SIZE    =     19    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      17
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

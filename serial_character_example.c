@@ -7,13 +7,15 @@
 #define LCD P2
 #define EN P3_7		// LCD enable
 #define RS P3_6		// LCD instruction or dataa
-#define count R5
 
-// Protótipos das funções
+// Prototipos das funï¿½ï¿½es
+void playComposer();
+void play_note(char note, unsigned int ms);
 void timer_config();
+void reset();
 void serial_config();
 void LCD_config();
-void INT_config();  // Configura interrupções
+void INT_config();  // Configura interrupï¿½ï¿½es
 void aponta_line1(); // Linha 1 do LCD
 void aponta_line2();
 void write_lcd_string(char *str);
@@ -22,45 +24,48 @@ void WR_CHAR();
 void isr_serial(void);	// Interruption
 void delay_us(int us);
 void delay_ms(int ms);
-void DELAY_5US();
-void DELAY_5MS();
-void DELAY_25MS();
 void nop();
 
-// Variáveis globais
-int count = 0;
-char MSG1[] = "Reading Serial..";
+// Variaveis globais
+char notes[];
 unsigned char char_temp;
+int state = 0;
+unsigned int count = 0;
+unsigned int countNotes = 0;
+//char MSG1[] = "Welcome...";
+const char code MSG2[] = "Choose mode...";
+char MSG3[] = "1 Piano 2 Compos";
+char MSG4[] = "-- PIANO MODE --";
+char MSG5[] = " Play any key ";
+char MSG6[] = "COMPOSER MODE";
+char MSG7[] = "Enter with notes and its time";
 
-// Função principal
+
+// Funcao principal
 void main(void) {
 	
 	timer_config();
 	serial_config();
 	LCD_config();
 	aponta_line1();
-	write_lcd_string(MSG1);
+	write_lcd_string(MSG2);
 	aponta_line2();
+	write_lcd_string(MSG3);
 	INT_config();
 
-  // Entra em loop, esperando interrupções
-  while (1) {
-		DAC = 0;
-		delay_us(500);
-		DAC = 10;
-		delay_us(500);
-		DAC = 50;
-		delay_us(500);
-		DAC = 60;
-		delay_us(500);
-		DAC = 70;
-		delay_us(500);
-  }
+  
+while (1) {
+	// Entra em loop, esperando interrupcoes
+	if(state == 3){
+		playComposer();
+	}
+}
 }
 
 void aponta_line1(){
-
-	LCD = 0x80;    			// Cursor para a primeira linha    
+	LCD = 0x01;     // Limpa o display.
+    WR_CMD();
+	LCD = 0x80;    	// Cursor para a primeira linha    
 	WR_CMD();
 }
 
@@ -77,9 +82,9 @@ void WR_CMD(){
 	RS = 0;
 	nop();
 	EN = 1;
-	DELAY_5US();
+	delay_us(5);
 	EN = 0;
-	DELAY_5MS();
+	delay_ms(5);
 }
 
 void WR_CHAR(){
@@ -87,67 +92,109 @@ void WR_CHAR(){
 	RS = 1;
 	nop();
 	EN = 1;
-	DELAY_5US();
+	delay_us(5);
 	EN = 0;
-	DELAY_5MS();
+	delay_ms(150);
 }
 
 
-// Função para escrever uma string na LCD
+// Funcao para escrever uma string na LCD
 void write_lcd_string(char *str) {
-  while (*str) {
+	count = 0;
+	while (*str) {
 		LCD = (unsigned char) *str++;
-    WR_CHAR();
-  }
+		WR_CHAR();
+		count++;
+		if(count == 16){	// Liga o scroll
+      		LCD = 0x07;
+			WR_CMD();
+		}
+	}
+	LCD = 0x06;     // Deslocamento do cursor E->D.
+    WR_CMD();
 }
 
-// Função para atender a interrupção serial
+// Funcao para atender a interrupcao serial
 void isr_serial(void)  interrupt 4 {
-  // Verifica se a interrupção foi causada por um caractere recebido
 
-    // Verifica se o contador de caracteres atingiu 16
-    if (count == 15) {
-      // Liga o scroll
-      LCD = 0x07;
-			WR_CMD();
-			
-    }
-    // Verifica se o contador de caracteres atingiu 40
-    else if (count == 39) {
-      // Reseta o contador e o display
-      count = 0;
-      LCD_config();
+    char_temp = SBUF;		// Le o caractere recebido da serial
+	//LCD = char_temp;		// Escreve o caractere recebido na LCD
+	//WR_CHAR();
+    
+	if(state == 1){   		 // Piano mode
+		if(char_temp == 27){
+			reset();
+		}
+		play_note(char_temp, 1000);
+
+	}else if(state == 2){    // Composer mode
+		if(char_temp == 27){
+			reset();
+		}
+		notes[countNotes] = char_temp;
+		countNotes++;
+		if(countNotes == 40 || char_temp == 13){
+			playComposer();
+			countNotes = 0;
+			state = 3;
+		}
+		
+	}else{					 // Menu mode
+		if(char_temp == '1'){
 			aponta_line1();
-			write_lcd_string(MSG1);
+			write_lcd_string(MSG4);
 			aponta_line2();
-			RI = 0;
-			return;
-    }
-
-    // Lê o caractere recebido da serial
-    char_temp = SBUF;
-		// Escreve o caractere recebido na LCD
-		LCD = char_temp;
-		WR_CHAR();
-
-    // Incrementa o contador de caracteres
+			write_lcd_string(MSG5);
+			state = 1;
+		}else if(char_temp == '2'){
+			aponta_line1();
+			write_lcd_string(MSG6);
+			aponta_line2();
+			write_lcd_string(MSG7);
+			aponta_line1();
+			write_lcd_string(MSG6);
+			state = 2;
+		}
+	}
     count++;
+    RI = 0;			// Limpa a flag de interrupcao serial
+}
 
-    // Limpa a flag de interrupção serial
-    RI = 0;
+void playComposer(){
+	char *str = notes;
+	char note;
+	char time;
+	IE = 0x00;	// Desliga interrupÃ§Ã£o serial
+	while(*str){
+		note = *str++;
+		time = *str++;
+		play_note(note, time);
+	}
+	state = 0;
+	IE = 0x90;    // Liga interrupÃ§Ã£o serial
 }
 //---------------------------- Configura ----------------------------------------------------
 void timer_config(){
 
-		TMOD = 0x20;    // Configura T/C 1 em modo 8 bits com recarga.
+	TMOD = 0x20;    // Configura T/C 1 em modo 8 bits com recarga.
     TH1 = 253;
     TL1 = 253;
     TR1 = 1;
 }
 
+void reset(){
+	count = 0;
+    LCD_config();
+	aponta_line1();
+	write_lcd_string(MSG2);
+	aponta_line2();
+	write_lcd_string(MSG3);
+	state = 0;
+}
+
 void serial_config() {
     PCON = 0x80;    // SMOD = 1.
-    SCON = 0x50;    // Modo 1, recepção habilitada (REN = 1).
+    SCON = 0x50;    // Modo 1, recepï¿½ï¿½o habilitada (REN = 1).
 }
 
 void LCD_config() {
@@ -168,26 +215,6 @@ void INT_config(){
 	IE = 0x90;
 }
 // ---------------------- Delays ---------------------------
-
-void DELAY_5US() {
-    nop();
-    nop();
-    nop();
-}
-
-void DELAY_5MS() {
-    unsigned char R1, R2;
-    for (R1 = 27; R1 > 0; R1--) {
-        for (R2 = 255; R2 > 0; R2--);
-    }
-}
-
-void DELAY_25MS() {
-    unsigned char R3;
-    for (R3 = 5; R3 > 0; R3--) {
-        DELAY_5MS();
-    }
-}
 
 void delay_us(int us)
 {

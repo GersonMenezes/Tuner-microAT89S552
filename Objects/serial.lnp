@@ -1,0 +1,5 @@
+".\Objects\Main.obj",
+".\Objects\tarefa7_Leitura serial e envio para LCD.obj",
+".\Objects\serial_character_example.obj" 
+TO ".\Objects\serial" 
+PRINT(".\Listings\serial.m51") RAMSIZE(256) 

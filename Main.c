@@ -1,3 +1,5 @@
+/*
+
 #include <at89x52.h>
 #include <string.h>
 #include <math.h>
@@ -27,7 +29,7 @@ void main(void)
 	
 	delay = 10; //ms
 	tensao = 1;
-	
+	/*
 	while(1){
 		
 			LCD = tmp;
@@ -41,20 +43,12 @@ void main(void)
 			tmp = tmp + (1 * sinal);
 			delay_us(100);
 	}*/
-			
+	/*		
 	while(1){
 		
-		
-		}
 		LCD = 0;
 		delay_us(500);
 		LCD = 10;
-		delay_us(500);
-		LCD = 20;
-		delay_us(500);
-		LCD = 30;
-		delay_us(500);
-		LCD = 40;
 		delay_us(500);
 		LCD = 50;
 		delay_us(500);
@@ -78,11 +72,11 @@ void main(void)
 		if(tensao > 254 || tensao < 1){
 			sinal = sinal * (-1);
 		}
-	}*/
-}
+	}
+}*/
 
 
-
+/*
 
 void delay_us(int us)
 {
@@ -103,3 +97,4 @@ void delay_ms(int ms){
 		ms--;
 	}
 }
+*/

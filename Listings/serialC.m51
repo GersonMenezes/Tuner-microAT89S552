@@ -1,0 +1,385 @@
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    09/12/2023  15:34:18  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0, INVOKED BY:
+C:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\Main.obj, .\Objects\tarefa7_Leitura serial e envio para LCD.obj, .\Objects\serial_
+>> character_example.obj TO .\Objects\serialC PRINT (.\Listings\serialC.m51) RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\Main.obj (MAIN)
+  .\Objects\tarefa7_Leitura serial e envio para LCD.obj (TAREFA7_LEITURA_SERIAL_E_ENVIO_PARA_LCD)
+  .\Objects\serial_character_example.obj (SERIAL_CHARACTER_EXAMPLE)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C_STARTUP)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?CLDPTR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  .\Objects\serialC (MAIN)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0014H     UNIT         ?DT?SERIAL_CHARACTER_EXAMPLE
+            DATA    001CH     0006H     UNIT         _DATA_GROUP_
+            IDATA   0022H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     0020H                  *** GAP ***
+            CODE    0023H     0003H     ABSOLUTE     
+                    0026H     07DAH                  *** GAP ***
+            CODE    0800H     008CH     UNIT         ?C_C51STARTUP
+            CODE    088CH     0077H     UNIT         ?PR?ISR_SERIAL?SERIAL_CHARACTER_EXAMPLE
+            CODE    0903H     0035H     UNIT         ?PR?MAIN?SERIAL_CHARACTER_EXAMPLE
+            CODE    0938H     002CH     UNIT         ?PR?_WRITE_LCD_STRING?SERIAL_CHARACTER_EXAMPLE
+            CODE    0964H     001EH     UNIT         ?PR?LCD_CONFIG?SERIAL_CHARACTER_EXAMPLE
+            CODE    0982H     001EH     UNIT         ?PR?_DELAY_MS?SERIAL_CHARACTER_EXAMPLE
+            CODE    09A0H     001CH     UNIT         ?PR?_DELAY_US?SERIAL_CHARACTER_EXAMPLE
+            CODE    09BCH     0019H     UNIT         ?C?LIB_CODE
+            CODE    09D5H     0018H     UNIT         ?C_INITSEG
+            CODE    09EDH     000FH     UNIT         ?PR?WR_CMD?SERIAL_CHARACTER_EXAMPLE
+            CODE    09FCH     000FH     UNIT         ?PR?WR_CHAR?SERIAL_CHARACTER_EXAMPLE
+            CODE    0A0BH     000CH     UNIT         ?PR?APONTA_LINE2?SERIAL_CHARACTER_EXAMPLE
+            CODE    0A17H     000CH     UNIT         ?PR?TIMER_CONFIG?SERIAL_CHARACTER_EXAMPLE
+            CODE    0A23H     0009H     UNIT         ?PR?DELAY_5US?SERIAL_CHARACTER_EXAMPLE
+            CODE    0A2CH     0009H     UNIT         ?PR?DELAY_5MS?SERIAL_CHARACTER_EXAMPLE
+            CODE    0A35H     0008H     UNIT         ?PR?DELAY_25MS?SERIAL_CHARACTER_EXAMPLE
+            CODE    0A3DH     0007H     UNIT         ?PR?SERIAL_CONFIG?SERIAL_CHARACTER_EXAMPLE
+            CODE    0A44H     0006H     UNIT         ?PR?APONTA_LINE1?SERIAL_CHARACTER_EXAMPLE
+            CODE    0A4AH     0004H     UNIT         ?PR?INT_CONFIG?SERIAL_CHARACTER_EXAMPLE
+            CODE    0A4EH     0001H     UNIT         ?PR?NOP?SERIAL_CHARACTER_EXAMPLE
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\serialC (MAIN)
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/12/2023  15:34:18  PAGE 2
+
+
+
+
+SEGMENT                                            DATA_GROUP 
+  +--> CALLED SEGMENT                            START    LENGTH
+----------------------------------------------------------------
+?PR?ISR_SERIAL?SERIAL_CHARACTER_EXAMPLE          -----    -----
+  +--> ?PR?WR_CMD?SERIAL_CHARACTER_EXAMPLE
+  +--> ?PR?LCD_CONFIG?SERIAL_CHARACTER_EXAMPLE
+  +--> ?PR?APONTA_LINE1?SERIAL_CHARACTER_EXA...
+  +--> ?PR?_WRITE_LCD_STRING?SERIAL_CHARACTE...
+  +--> ?PR?APONTA_LINE2?SERIAL_CHARACTER_EXA...
+  +--> ?PR?WR_CHAR?SERIAL_CHARACTER_EXAMPLE
+
+?PR?WR_CMD?SERIAL_CHARACTER_EXAMPLE              -----    -----
+  +--> ?PR?NOP?SERIAL_CHARACTER_EXAMPLE
+  +--> ?PR?DELAY_5US?SERIAL_CHARACTER_EXAMPLE
+  +--> ?PR?DELAY_5MS?SERIAL_CHARACTER_EXAMPLE
+
+?PR?DELAY_5US?SERIAL_CHARACTER_EXAMPLE           -----    -----
+  +--> ?PR?NOP?SERIAL_CHARACTER_EXAMPLE
+
+?PR?LCD_CONFIG?SERIAL_CHARACTER_EXAMPLE          -----    -----
+  +--> ?PR?WR_CMD?SERIAL_CHARACTER_EXAMPLE
+
+?PR?APONTA_LINE1?SERIAL_CHARACTER_EXA...         -----    -----
+  +--> ?PR?WR_CMD?SERIAL_CHARACTER_EXAMPLE
+
+?PR?_WRITE_LCD_STRING?SERIAL_CHARACTE...         001FH    0003H
+  +--> ?PR?WR_CHAR?SERIAL_CHARACTER_EXAMPLE
+
+?PR?WR_CHAR?SERIAL_CHARACTER_EXAMPLE             -----    -----
+  +--> ?PR?NOP?SERIAL_CHARACTER_EXAMPLE
+  +--> ?PR?DELAY_5US?SERIAL_CHARACTER_EXAMPLE
+  +--> ?PR?DELAY_5MS?SERIAL_CHARACTER_EXAMPLE
+
+?PR?APONTA_LINE2?SERIAL_CHARACTER_EXA...         -----    -----
+  +--> ?PR?WR_CMD?SERIAL_CHARACTER_EXAMPLE
+
+*** NEW ROOT ***************************************************
+
+?C_C51STARTUP                                    -----    -----
+  +--> ?PR?MAIN?SERIAL_CHARACTER_EXAMPLE
+  +--> ?C_INITSEG
+
+?PR?MAIN?SERIAL_CHARACTER_EXAMPLE                -----    -----
+  +--> ?PR?TIMER_CONFIG?SERIAL_CHARACTER_EXA...
+  +--> ?PR?SERIAL_CONFIG?SERIAL_CHARACTER_EX...
+  +--> ?PR?LCD_CONFIG?SERIAL_CHARACTER_EXAMPLE
+  +--> ?PR?APONTA_LINE1?SERIAL_CHARACTER_EXA...
+  +--> ?PR?_WRITE_LCD_STRING?SERIAL_CHARACTE...
+  +--> ?PR?APONTA_LINE2?SERIAL_CHARACTER_EXA...
+  +--> ?PR?INT_CONFIG?SERIAL_CHARACTER_EXAMPLE
+  +--> ?PR?_DELAY_US?SERIAL_CHARACTER_EXAMPLE
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\serialC (MAIN)
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/12/2023  15:34:18  PAGE 3
+
+
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        TAREFA7_LEITURA_SERIAL_E_ENVIO_PARA_LCD
+  -------         ENDMOD        TAREFA7_LEITURA_SERIAL_E_ENVIO_PARA_LCD
+
+  -------         MODULE        SERIAL_CHARACTER_EXAMPLE
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  C:0A17H         PUBLIC        timer_config
+  D:0080H         PUBLIC        P0
+  D:00A0H         PUBLIC        P2
+  D:0008H         PUBLIC        R5
+  D:00A8H         PUBLIC        IE
+  D:000AH         PUBLIC        MSG1
+  B:00B0H.6       PUBLIC        P3_6
+  B:00B0H.7       PUBLIC        P3_7
+  B:0098H.0       PUBLIC        RI
+  C:0903H         PUBLIC        main
+  C:0A2CH         PUBLIC        DELAY_5MS
+  C:09FCH         PUBLIC        WR_CHAR
+  C:0964H         PUBLIC        LCD_config
+  C:0A23H         PUBLIC        DELAY_5US
+  D:0099H         PUBLIC        SBUF
+  D:0087H         PUBLIC        PCON
+  C:088CH         PUBLIC        isr_serial
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:001BH         PUBLIC        char_temp
+  C:093EH         PUBLIC        _write_lcd_string
+  C:0A44H         PUBLIC        aponta_line1
+  C:0A0BH         PUBLIC        aponta_line2
+  C:0A4AH         PUBLIC        INT_config
+  B:0088H.5       PUBLIC        TF0
+  D:008CH         PUBLIC        TH0
+  D:008DH         PUBLIC        TH1
+  C:0A4EH         PUBLIC        nop
+  D:008AH         PUBLIC        TL0
+  D:008BH         PUBLIC        TL1
+  C:0982H         PUBLIC        _delay_ms
+  B:0088H.4       PUBLIC        TR0
+  B:0088H.6       PUBLIC        TR1
+  C:0A35H         PUBLIC        DELAY_25MS
+  C:09A4H         PUBLIC        _delay_us
+  C:09EDH         PUBLIC        WR_CMD
+  C:0A3DH         PUBLIC        serial_config
+  -------         PROC          MAIN
+  C:0903H         LINE#         36
+  C:0903H         LINE#         38
+  C:0906H         LINE#         39
+  C:0909H         LINE#         40
+  C:090CH         LINE#         41
+  C:090FH         LINE#         42
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/12/2023  15:34:18  PAGE 4
+
+
+  C:0912H         LINE#         43
+  C:0915H         LINE#         44
+  C:0918H         LINE#         47
+  C:0918H         LINE#         48
+  C:091BH         LINE#         49
+  C:091EH         LINE#         50
+  C:0921H         LINE#         51
+  C:0924H         LINE#         52
+  C:0927H         LINE#         53
+  C:092AH         LINE#         54
+  C:092DH         LINE#         55
+  C:0930H         LINE#         56
+  C:0933H         LINE#         57
+  C:0936H         LINE#         58
+  -------         ENDPROC       MAIN
+  -------         PROC          APONTA_LINE1
+  C:0A44H         LINE#         61
+  C:0A44H         LINE#         63
+  C:0A47H         LINE#         64
+  -------         ENDPROC       APONTA_LINE1
+  -------         PROC          APONTA_LINE2
+  C:0A0BH         LINE#         67
+  C:0A0BH         LINE#         69
+  C:0A0EH         LINE#         70
+  C:0A11H         LINE#         71
+  C:0A14H         LINE#         72
+  -------         ENDPROC       APONTA_LINE2
+  -------         PROC          WR_CMD
+  C:09EDH         LINE#         75
+  C:09EDH         LINE#         77
+  C:09EFH         LINE#         78
+  C:09F2H         LINE#         79
+  C:09F4H         LINE#         80
+  C:09F7H         LINE#         81
+  C:09F9H         LINE#         82
+  -------         ENDPROC       WR_CMD
+  -------         PROC          WR_CHAR
+  C:09FCH         LINE#         85
+  C:09FCH         LINE#         87
+  C:09FEH         LINE#         88
+  C:0A01H         LINE#         89
+  C:0A03H         LINE#         90
+  C:0A06H         LINE#         91
+  C:0A08H         LINE#         92
+  -------         ENDPROC       WR_CHAR
+  -------         PROC          L?0047
+  -------         ENDPROC       L?0047
+  -------         PROC          _WRITE_LCD_STRING
+  D:001FH         SYMBOL        str
+  C:093EH         LINE#         97
+  C:0944H         LINE#         98
+  C:094FH         LINE#         99
+  C:095EH         LINE#         100
+  C:0961H         LINE#         101
+  C:0963H         LINE#         102
+  -------         ENDPROC       _WRITE_LCD_STRING
+  -------         PROC          ISR_SERIAL
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/12/2023  15:34:18  PAGE 5
+
+
+  C:088CH         LINE#         105
+  C:08A9H         LINE#         109
+  C:08B1H         LINE#         111
+  C:08B4H         LINE#         112
+  C:08B7H         LINE#         114
+  C:08B9H         LINE#         116
+  C:08C1H         LINE#         118
+  C:08C5H         LINE#         119
+  C:08C8H         LINE#         120
+  C:08CBH         LINE#         121
+  C:08CEH         LINE#         122
+  C:08D1H         LINE#         123
+  C:08D5H         LINE#         125
+  C:08D5H         LINE#         128
+  C:08D8H         LINE#         130
+  C:08DBH         LINE#         131
+  C:08DEH         LINE#         134
+  C:08E6H         LINE#         137
+  C:08E8H         LINE#         138
+  -------         ENDPROC       ISR_SERIAL
+  -------         PROC          TIMER_CONFIG
+  C:0A17H         LINE#         140
+  C:0A17H         LINE#         142
+  C:0A1AH         LINE#         143
+  C:0A1DH         LINE#         144
+  C:0A20H         LINE#         145
+  C:0A22H         LINE#         146
+  -------         ENDPROC       TIMER_CONFIG
+  -------         PROC          SERIAL_CONFIG
+  C:0A3DH         LINE#         148
+  C:0A3DH         LINE#         149
+  C:0A40H         LINE#         150
+  C:0A43H         LINE#         151
+  -------         ENDPROC       SERIAL_CONFIG
+  -------         PROC          LCD_CONFIG
+  C:0964H         LINE#         153
+  C:0964H         LINE#         154
+  C:0967H         LINE#         155
+  C:096AH         LINE#         156
+  C:096DH         LINE#         157
+  C:0970H         LINE#         158
+  C:0973H         LINE#         159
+  C:0976H         LINE#         160
+  C:0979H         LINE#         161
+  C:097CH         LINE#         162
+  C:097FH         LINE#         163
+  -------         ENDPROC       LCD_CONFIG
+  -------         PROC          INT_CONFIG
+  C:0A4AH         LINE#         166
+  C:0A4AH         LINE#         168
+  C:0A4DH         LINE#         169
+  -------         ENDPROC       INT_CONFIG
+  -------         PROC          DELAY_5US
+  C:0A23H         LINE#         172
+  C:0A23H         LINE#         173
+  C:0A26H         LINE#         174
+  C:0A29H         LINE#         175
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/12/2023  15:34:18  PAGE 6
+
+
+  -------         ENDPROC       DELAY_5US
+  -------         PROC          DELAY_5MS
+  -------         DO            
+  D:0007H         SYMBOL        R1
+  D:0006H         SYMBOL        R2
+  -------         ENDDO         
+  C:0A2CH         LINE#         178
+  C:0A2CH         LINE#         180
+  C:0A2EH         LINE#         181
+  C:0A32H         LINE#         182
+  C:0A34H         LINE#         183
+  -------         ENDPROC       DELAY_5MS
+  -------         PROC          DELAY_25MS
+  -------         DO            
+  D:0005H         SYMBOL        R3
+  -------         ENDDO         
+  C:0A35H         LINE#         185
+  C:0A35H         LINE#         187
+  C:0A37H         LINE#         188
+  C:0A3AH         LINE#         189
+  C:0A3CH         LINE#         190
+  -------         ENDPROC       DELAY_25MS
+  C:09A0H         SYMBOL        L?0046
+  -------         PROC          L?0045
+  -------         ENDPROC       L?0045
+  C:09A0H         SYMBOL        L?0046
+  -------         PROC          _DELAY_US
+  D:0006H         SYMBOL        us
+  -------         DO            
+  D:0004H         SYMBOL        i
+  -------         ENDDO         
+  C:09A4H         LINE#         192
+  C:09A4H         LINE#         193
+  C:09A4H         LINE#         195
+  C:09BBH         LINE#         196
+  -------         ENDPROC       _DELAY_US
+  -------         PROC          _DELAY_MS
+  D:0006H         SYMBOL        ms
+  C:0982H         LINE#         198
+  C:0982H         LINE#         199
+  C:0985H         LINE#         201
+  C:0989H         LINE#         202
+  C:098CH         LINE#         203
+  C:098FH         LINE#         204
+  C:0991H         LINE#         205
+  C:0994H         LINE#         206
+  C:0996H         LINE#         207
+  C:0998H         LINE#         208
+  C:099DH         LINE#         209
+  C:099FH         LINE#         210
+  -------         ENDPROC       _DELAY_MS
+  -------         PROC          NOP
+  C:0A4EH         LINE#         212
+  C:0A4EH         LINE#         213
+  -------         ENDPROC       NOP
+  -------         ENDMOD        SERIAL_CHARACTER_EXAMPLE
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/12/2023  15:34:18  PAGE 7
+
+
+  -------         MODULE        ?C?CLDPTR
+  C:09BCH         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DELAY_25MS?SERIAL_CHARACTER_EXAMPLE
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?SERIAL_CHARACTER_EXAMPLE
+
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_WRITE_LCD_STRING?SERIAL_CHARACTER_EXAMPLE
+    CALLER1: ?PR?ISR_SERIAL?SERIAL_CHARACTER_EXAMPLE
+    CALLER2: ?C_C51STARTUP
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 01ACH BYTE (20%) *
+******************************************************************************
+
+Program Size: data=35.0 xdata=0 code=597
+LINK/LOCATE RUN COMPLETE.  3 WARNING(S),  0 ERROR(S)

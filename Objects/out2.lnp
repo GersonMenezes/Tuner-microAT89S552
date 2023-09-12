@@ -1,0 +1,3 @@
+".\Objects\Main.obj" 
+TO ".\Objects\out2" 
+PRINT(".\Listings\out2.m51") RAMSIZE(256) 

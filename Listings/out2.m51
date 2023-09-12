@@ -1,8 +1,8 @@
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    09/11/2023  16:47:07  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    09/11/2023  16:49:37  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22.4.0, INVOKED BY:
-C:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\Main.obj TO .\Objects\out PRINT (.\Listings\out.m51) RAMSIZE (256)
+C:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\Main.obj TO .\Objects\out2 PRINT (.\Listings\out2.m51) RAMSIZE (256)
 
 
 MEMORY MODEL: SMALL WITH FLOATING POINT ARITHMETIC
@@ -13,7 +13,7 @@ INPUT MODULES INCLUDED:
   C:\KEIL_V5\C51\LIB\C51S.LIB (?C_STARTUP)
 
 
-LINK MAP OF MODULE:  .\Objects\out (MAIN)
+LINK MAP OF MODULE:  .\Objects\out2 (MAIN)
 
 
             TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
@@ -27,14 +27,14 @@ LINK MAP OF MODULE:  .\Objects\out (MAIN)
             * * * * * * *   C O D E   M E M O R Y   * * * * * * *
             CODE    0000H     0003H     ABSOLUTE     
                     0003H     07FDH                  *** GAP ***
-            CODE    0800H     0055H     UNIT         ?PR?MAIN?MAIN
-            CODE    0855H     001EH     UNIT         ?PR?_DELAY_MS?MAIN
-            CODE    0873H     001CH     UNIT         ?PR?_DELAY_US?MAIN
-            CODE    088FH     000CH     UNIT         ?C_C51STARTUP
+            CODE    0800H     0043H     UNIT         ?PR?MAIN?MAIN
+            CODE    0843H     001EH     UNIT         ?PR?_DELAY_MS?MAIN
+            CODE    0861H     001CH     UNIT         ?PR?_DELAY_US?MAIN
+            CODE    087DH     000CH     UNIT         ?C_C51STARTUP
 
 
 
-OVERLAY MAP OF MODULE:   .\Objects\out (MAIN)
+OVERLAY MAP OF MODULE:   .\Objects\out2 (MAIN)
 
 
 SEGMENT                          DATA_GROUP 
@@ -48,7 +48,7 @@ SEGMENT                          DATA_GROUP
 
 
 
-SYMBOL TABLE OF MODULE:  .\Objects\out (MAIN)
+SYMBOL TABLE OF MODULE:  .\Objects\out2 (MAIN)
 
   VALUE           TYPE          NAME
   ----------------------------------
@@ -59,15 +59,15 @@ SYMBOL TABLE OF MODULE:  .\Objects\out (MAIN)
   B:0090H.0       PUBLIC        P1_0
   C:0800H         PUBLIC        main
   D:0089H         PUBLIC        TMOD
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/11/2023  16:47:07  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/11/2023  16:49:37  PAGE 2
 
 
   B:0088H.5       PUBLIC        TF0
   D:008CH         PUBLIC        TH0
   D:008AH         PUBLIC        TL0
-  C:0855H         PUBLIC        _delay_ms
+  C:0843H         PUBLIC        _delay_ms
   B:0088H.4       PUBLIC        TR0
-  C:0877H         PUBLIC        _delay_us
+  C:0865H         PUBLIC        _delay_us
   -------         PROC          MAIN
   -------         DO            
   D:0008H         SYMBOL        sinal
@@ -101,45 +101,39 @@ SYMBOL TABLE OF MODULE:  .\Objects\out (MAIN)
   C:0838H         LINE#         54
   C:083BH         LINE#         55
   C:083EH         LINE#         56
-  C:0841H         LINE#         57
-  C:0844H         LINE#         58
-  C:0847H         LINE#         59
-  C:084AH         LINE#         60
-  C:084DH         LINE#         61
-  C:0850H         LINE#         62
-  C:0853H         LINE#         64
+  C:0841H         LINE#         58
   -------         ENDPROC       MAIN
-  C:0873H         SYMBOL        L?0016
+  C:0861H         SYMBOL        L?0016
   -------         PROC          L?0015
   -------         ENDPROC       L?0015
-  C:0873H         SYMBOL        L?0016
+  C:0861H         SYMBOL        L?0016
   -------         PROC          _DELAY_US
   D:0006H         SYMBOL        us
   -------         DO            
   D:0004H         SYMBOL        i
   -------         ENDDO         
-  C:0877H         LINE#         85
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/11/2023  16:47:07  PAGE 3
-
-
-  C:0877H         LINE#         86
-  C:0877H         LINE#         88
-  C:088EH         LINE#         89
+  C:0865H         LINE#         79
+  C:0865H         LINE#         80
+  C:0865H         LINE#         82
+  C:087CH         LINE#         83
   -------         ENDPROC       _DELAY_US
   -------         PROC          _DELAY_MS
   D:0006H         SYMBOL        ms
-  C:0855H         LINE#         91
-  C:0855H         LINE#         92
-  C:0858H         LINE#         94
-  C:085CH         LINE#         95
-  C:085FH         LINE#         96
-  C:0862H         LINE#         97
-  C:0864H         LINE#         98
-  C:0867H         LINE#         99
-  C:0869H         LINE#         100
-  C:086BH         LINE#         101
-  C:0870H         LINE#         102
-  C:0872H         LINE#         103
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/11/2023  16:49:37  PAGE 3
+
+
+  C:0843H         LINE#         85
+  C:0843H         LINE#         86
+  C:0846H         LINE#         88
+  C:084AH         LINE#         89
+  C:084DH         LINE#         90
+  C:0850H         LINE#         91
+  C:0852H         LINE#         92
+  C:0855H         LINE#         93
+  C:0857H         LINE#         94
+  C:0859H         LINE#         95
+  C:085EH         LINE#         96
+  C:0860H         LINE#         97
   -------         ENDPROC       _DELAY_MS
   -------         ENDMOD        MAIN
 
@@ -147,8 +141,8 @@ SYMBOL TABLE OF MODULE:  .\Objects\out (MAIN)
     SEGMENT: ?PR?_DELAY_MS?MAIN
 
 ******************************************************************************
-* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 008FH BYTE ( 6%) *
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 007DH BYTE ( 6%) *
 ******************************************************************************
 
-Program Size: data=22.0 xdata=0 code=158
+Program Size: data=22.0 xdata=0 code=140
 LINK/LOCATE RUN COMPLETE.  1 WARNING(S),  0 ERROR(S)

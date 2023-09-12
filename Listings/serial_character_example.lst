@@ -1,0 +1,243 @@
+C51 COMPILER V9.60.7.0   SERIAL_CHARACTER_EXAMPLE                                          09/12/2023 15:34:18 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE SERIAL_CHARACTER_EXAMPLE
+OBJECT MODULE PLACED IN .\Objects\serial_character_example.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE serial_character_example.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND P
+                    -RINT(.\Listings\serial_character_example.lst) TABS(2) OBJECT(.\Objects\serial_character_example.obj)
+
+line level    source
+
+   1          
+   2          #include <at89x52.h>
+   3          #include <string.h>
+   4          #include <math.h>
+   5          
+   6          #define DAC P0
+   7          #define LCD P2
+   8          #define EN P3_7   // LCD enable
+   9          #define RS P3_6   // LCD instruction or dataa
+  10          #define count R5
+  11          
+  12          // Protótipos das funções
+  13          void timer_config();
+  14          void serial_config();
+  15          void LCD_config();
+  16          void INT_config();  // Configura interrupções
+  17          void aponta_line1(); // Linha 1 do LCD
+  18          void aponta_line2();
+  19          void write_lcd_string(char *str);
+  20          void WR_CMD();
+  21          void WR_CHAR();
+  22          void isr_serial(void);  // Interruption
+  23          void delay_us(int us);
+  24          void delay_ms(int ms);
+  25          void DELAY_5US();
+  26          void DELAY_5MS();
+  27          void DELAY_25MS();
+  28          void nop();
+  29          
+  30          // Variáveis globais
+  31          int count = 0;
+  32          char MSG1[] = "Reading Serial..";
+  33          unsigned char char_temp;
+  34          
+  35          // Função principal
+  36          void main(void) {
+  37   1        
+  38   1        timer_config();
+  39   1        serial_config();
+  40   1        LCD_config();
+  41   1        aponta_line1();
+  42   1        write_lcd_string(MSG1);
+  43   1        aponta_line2();
+  44   1        INT_config();
+  45   1      
+  46   1        // Entra em loop, esperando interrupções
+  47   1        while (1) {
+  48   2          DAC = 0;
+  49   2          delay_us(500);
+  50   2          DAC = 10;
+  51   2          delay_us(500);
+  52   2          DAC = 50;
+  53   2          delay_us(500);
+  54   2          DAC = 60;
+C51 COMPILER V9.60.7.0   SERIAL_CHARACTER_EXAMPLE                                          09/12/2023 15:34:18 PAGE 2   
+
+  55   2          delay_us(500);
+  56   2          DAC = 70;
+  57   2          delay_us(500);
+  58   2        }
+  59   1      }
+  60          
+  61          void aponta_line1(){
+  62   1      
+  63   1        LCD = 0x80;         // Cursor para a primeira linha    
+  64   1        WR_CMD();
+  65   1      }
+  66          
+  67          void aponta_line2(){
+  68   1        
+  69   1        LCD = 0xC0; //Cursor para a segunda linha
+  70   1        WR_CMD();
+  71   1        LCD = 0x0F; //Cursor Piscando
+  72   1        WR_CMD();
+  73   1      }
+  74          
+  75          void WR_CMD(){
+  76   1        
+  77   1        RS = 0;
+  78   1        nop();
+  79   1        EN = 1;
+  80   1        DELAY_5US();
+  81   1        EN = 0;
+  82   1        DELAY_5MS();
+  83   1      }
+  84          
+  85          void WR_CHAR(){
+  86   1        
+  87   1        RS = 1;
+  88   1        nop();
+  89   1        EN = 1;
+  90   1        DELAY_5US();
+  91   1        EN = 0;
+  92   1        DELAY_5MS();
+  93   1      }
+  94          
+  95          
+  96          // Função para escrever uma string na LCD
+  97          void write_lcd_string(char *str) {
+  98   1        while (*str) {
+  99   2          LCD = (unsigned char) *str++;
+ 100   2          WR_CHAR();
+ 101   2        }
+ 102   1      }
+ 103          
+ 104          // Função para atender a interrupção serial
+ 105          void isr_serial(void)  interrupt 4 {
+ 106   1        // Verifica se a interrupção foi causada por um caractere recebido
+ 107   1      
+ 108   1          // Verifica se o contador de caracteres atingiu 16
+ 109   1          if (count == 15) {
+ 110   2            // Liga o scroll
+ 111   2            LCD = 0x07;
+ 112   2            WR_CMD();
+ 113   2            
+ 114   2          }
+ 115   1          // Verifica se o contador de caracteres atingiu 40
+ 116   1          else if (count == 39) {
+C51 COMPILER V9.60.7.0   SERIAL_CHARACTER_EXAMPLE                                          09/12/2023 15:34:18 PAGE 3   
+
+ 117   2            // Reseta o contador e o display
+ 118   2            count = 0;
+ 119   2            LCD_config();
+ 120   2            aponta_line1();
+ 121   2            write_lcd_string(MSG1);
+ 122   2            aponta_line2();
+ 123   2            RI = 0;
+ 124   2            return;
+ 125   2          }
+ 126   1      
+ 127   1          // Lê o caractere recebido da serial
+ 128   1          char_temp = SBUF;
+ 129   1          // Escreve o caractere recebido na LCD
+ 130   1          LCD = char_temp;
+ 131   1          WR_CHAR();
+ 132   1      
+ 133   1          // Incrementa o contador de caracteres
+ 134   1          count++;
+ 135   1      
+ 136   1          // Limpa a flag de interrupção serial
+ 137   1          RI = 0;
+ 138   1      }
+ 139          //---------------------------- Configura ----------------------------------------------------
+ 140          void timer_config(){
+ 141   1      
+ 142   1          TMOD = 0x20;    // Configura T/C 1 em modo 8 bits com recarga.
+ 143   1          TH1 = 253;
+ 144   1          TL1 = 253;
+ 145   1          TR1 = 1;
+ 146   1      }
+ 147          
+ 148          void serial_config() {
+ 149   1          PCON = 0x80;    // SMOD = 1.
+ 150   1          SCON = 0x50;    // Modo 1, recepção habilitada (REN = 1).
+ 151   1      }
+ 152          
+ 153          void LCD_config() {
+ 154   1          LCD = 0x38;     // Define a matriz 5x7 pontos.
+ 155   1          WR_CMD();
+ 156   1          LCD = 0x06;     // Deslocamento do cursor E->D.
+ 157   1          WR_CMD();
+ 158   1          LCD = 0x0E;     // Cursor fixo.
+ 159   1          WR_CMD();
+ 160   1          LCD = 0x01;     // Limpa o display.
+ 161   1          WR_CMD();
+ 162   1          LCD = 0x02;     // Vai para a primeira linha (opcional).
+ 163   1          WR_CMD();
+ 164   1      }
+ 165          
+ 166          void INT_config(){
+ 167   1        
+ 168   1        IE = 0x90;
+ 169   1      }
+ 170          // ---------------------- Delays ---------------------------
+ 171          
+ 172          void DELAY_5US() {
+ 173   1          nop();
+ 174   1          nop();
+ 175   1          nop();
+ 176   1      }
+ 177          
+ 178          void DELAY_5MS() {
+C51 COMPILER V9.60.7.0   SERIAL_CHARACTER_EXAMPLE                                          09/12/2023 15:34:18 PAGE 4   
+
+ 179   1          unsigned char R1, R2;
+ 180   1          for (R1 = 27; R1 > 0; R1--) {
+ 181   2              for (R2 = 255; R2 > 0; R2--);
+ 182   2          }
+ 183   1      }
+ 184          
+ 185          void DELAY_25MS() {
+ 186   1          unsigned char R3;
+ 187   1          for (R3 = 5; R3 > 0; R3--) {
+ 188   2              DELAY_5MS();
+ 189   2          }
+ 190   1      }
+ 191          
+ 192          void delay_us(int us)
+ 193          {
+ 194   1        int i;
+ 195   1        for(i = 0; i < us; i++){}
+ 196   1      }
+ 197          
+ 198          void delay_ms(int ms){
+ 199   1        TMOD |= 0x01;
+ 200   1        
+ 201   1        while(ms){
+ 202   2          TL0 = 0x65;
+ 203   2          TH0 = 0xFC;
+ 204   2          TR0 = 1;
+ 205   2          while(!TF0);
+ 206   2          TF0 = 0;
+ 207   2          TR0 = 0;
+ 208   2          ms--;
+ 209   2        }
+ 210   1      }
+ 211          
+ 212          void nop(){
+ 213   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    402    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     20       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

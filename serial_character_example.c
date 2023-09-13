@@ -51,7 +51,6 @@ const unsigned char code reps_notes[] = {
 
 // Funcao principal
 void main(void){
-	timer_config();
 	serial_config();
 	LCD_config();
 	aponta_line1();
@@ -91,72 +90,118 @@ void main(void){
 		play_note('y', 10);
 		delay_ms(1000);
 
+		LCD = 'u';
+		WR_CHAR();
 		play_note('u', 10);
 		delay_ms(1000);
-
+		
+		LCD = 'i';
+		WR_CHAR();
 		play_note('i', 10);
 		delay_ms(1000);
 
+		LCD = 'o';
+		WR_CHAR();
 		play_note('o', 10);
 		delay_ms(1000);
 
+		LCD = 'p';
+		WR_CHAR();
 		play_note('p', 10);
 		delay_ms(1000);
 
+		LCD = 'a';
+		WR_CHAR();
 		play_note('a', 10);
 		delay_ms(1000);
 
+		LCD = 's';
+		WR_CHAR();
 		play_note('s', 10);
 		delay_ms(1000);
 
+		LCD = 'd';
+		WR_CHAR();
 		play_note('d', 10);
 		delay_ms(1000);
 
+		LCD = 'f';
+		WR_CHAR();
 		play_note('f', 10);
 		delay_ms(1000);
 
+		LCD = 'g';
+		WR_CHAR();
 		play_note('g', 10);
 		delay_ms(1000);
 
+		LCD = 'h';
+		WR_CHAR();
 		play_note('h', 10);
 		delay_ms(1000);
 
+		LCD = 'j';
+		WR_CHAR();
 		play_note('j', 10);
 		delay_ms(1000);
 
+		LCD = 'k';
+		WR_CHAR();
 		play_note('k', 10);
 		delay_ms(1000);
-
+		
+		LCD = 'l';
+		WR_CHAR();
 		play_note('l', 10);
 		delay_ms(1000);
 
+		LCD = 199;
+		WR_CHAR();
 		play_note(199, 10);
 		delay_ms(1000);
 
+		LCD = 'z';
+		WR_CHAR();
 		play_note('z', 10);
 		delay_ms(1000);
 
+		LCD = 'x';
+		WR_CHAR();
 		play_note('x', 10);
 		delay_ms(1000);
 
+		LCD = 'c';
+		WR_CHAR();
 		play_note('c', 10);
 		delay_ms(1000);
 
+		LCD = 'v';
+		WR_CHAR();
 		play_note('v', 10);
 		delay_ms(1000);
 
+		LCD = 'b';
+		WR_CHAR();
 		play_note('b', 10);
 		delay_ms(1000);
 
+		LCD = 'n';
+		WR_CHAR();
 		play_note('n', 10);
 		delay_ms(1000);
 
+		LCD = 'm';
+		WR_CHAR();
 		play_note('m', 10);
 		delay_ms(1000);
 
+		LCD = '.';
+		WR_CHAR();
 		play_note('.', 10);
 		delay_ms(1000);
 
+		LCD = ';';
+		WR_CHAR();
 		play_note(';', 10);
 		delay_ms(1000);
 		// Entra em loop, esperando interrupcoes
@@ -355,13 +400,13 @@ void playComposer(){
 // ---------------------- Delays ---------------------------
 
 void delay_notes(unsigned char index){
-	TMOD = 0x01;
-	TH0 = f_Htimer[index];
-	TL0 = f_Ltimer[index];
-	TR0 = 1;
-	while (!TF0);
-	TF0 = 0;
-	TR0 = 0;
+	TMOD |= 0x10;
+	TH1 = f_Htimer[index];
+	TL1 = f_Ltimer[index];
+	TR1 = 1;
+	while (!TF1);
+	TF1 = 0;
+	TR1 = 0;
 }
 
 void delay_ms(int ms){
@@ -441,13 +486,6 @@ void write_lcd_string(char *str){
 }
 
 //---------------------------- Configura ----------------------------------------------------
-
-void timer_config(){
-	TMOD = 0x20; // Configura T/C 1 em modo 8 bits com recarga.
-	TH1 = 253;
-	TL1 = 253;
-	TR1 = 1;
-}
 
 void reset(){
 	count = 0;

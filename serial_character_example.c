@@ -35,7 +35,8 @@ char char_temp;
 unsigned int count = 0;
 unsigned int countNotes = 0;
 
-unsigned char state ;
+unsigned char stateMenu, stateSerial;
+
 unsigned char note;
 // char MSG1[] = "Welcome...";
 const char code MSG2[] = "Choose mode...";
@@ -60,59 +61,87 @@ void main(void){
 	LCD_config();
 	INT_config();
 
-	state = 0;
+	stateMenu = 0;
+	stateSerial = 0;
 
 	while (1){ //ações que acontecem em cada estado
 		
-		if(state == 0){
+		if(stateMenu == 0){
 			aponta_line1();
 			write_lcd_string(MSG2);
 			aponta_line2();
 			write_lcd_string(MSG3);
+			stateSerial = 0;
+			stateMenu = 1;
 		}
-		else if (state == 100){ //msg Piano mode
+		else if(stateMenu == 1){
+			P0_0 = 1;
+		}
+		else if (stateMenu == 100){ //msg Piano mode
+			P0_2 = 1;
+			P0_1 = 0;
+			P0_0 = 0;
 			aponta_line1();
 			write_lcd_string(MSG4);
 			aponta_line2();
 			write_lcd_string(MSG5);
-			state = 1;
+			stateSerial = 1;
 		}
-		else if (state == 101){ //msg Composer mode
+		else if (stateMenu == 101){ //msg Composer mode
+			P0_2 = 1;
+			P0_1 = 0;
+			P0_0 = 1;
 			aponta_line1();
 			write_lcd_string(MSG6);
 			aponta_line2();
 			write_lcd_string(MSG7);
 			aponta_line1();
 			write_lcd_string(MSG6);
-			state = 50;
+			stateSerial = 2;
 		}
-		else if (state == 2){ // Tocar Note e voltar para espera de outra nota
+		else if (stateMenu == 2){ // Tocar Note e voltar para espera de outra nota
+			P0_2 = 0;
+			P0_1 = 1;
+			P0_0 = 0;
+			stateSerial = 1;
 			play_note(char_temp, 1000);
-			state = 1;
+			
 		}
-		else if (state == 255){	// Resetar
+		else if (stateMenu == 255){	// Resetar
+			EA = 0;
 			reset();
+			stateSerial = 0;
+			EA = 1;
 		}
 	}
 		
 }
 
-
-
 // Funcao para atender a interrupcao serial
 void isr_serial(void) interrupt 4 {	
 	
 	char_temp = SBUF;
-	
-	if (state == 1){ // Piano mode
-
-		if (char_temp == 27){ //reset
-			state = 255;
+	if (stateSerial == 0) { // Menu mode
+		P0_7 = 0;
+		if (char_temp == '1'){ 	//MSG Piano Mode
+			stateMenu = 100;
+			
 		}
-		else{	//toca note
-			state = 2;
+		else if (char_temp == '2'){	// MSG Composer Mode
+			stateMenu = 101;
 		}
 	}
+	else if (stateSerial == 1){ // Piano mode
+
+		P0_7 = 1;
+		if (char_temp == 27){ //reset
+			stateMenu = 255;
+		}
+		else{	//toca note
+			stateMenu = 2;
+		}
+	}
+
 	/*
 	else if (state == 2){ // Composer mode
 
@@ -130,16 +159,6 @@ void isr_serial(void) interrupt 4 {
 		}
 	}
 	*/
-	else if (state==0) { // Menu mode
-
-		if (char_temp == '1'){
-			state = 100;
-			
-		}
-		else if (char_temp == '2'){
-			state = 101;
-		}
-	}
 	RI = 0; // Limpa a flag de interrupcao serial
 }
 
@@ -273,7 +292,7 @@ void playComposer(){
 		time = *str++;
 		play_note(note, time);
 	}
-	state = 0;
+	stateMenu = 0;
 	//IE = 0x90; // Liga interrup��o serial
 }
 
@@ -520,7 +539,7 @@ void reset(){
 	write_lcd_string(MSG2);
 	aponta_line2();
 	write_lcd_string(MSG3);
-	state = 0;
+	stateMenu = 0;
 }
 
 void serial_config(){

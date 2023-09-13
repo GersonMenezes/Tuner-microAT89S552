@@ -64,101 +64,101 @@ void main(void){
 		LCD = 'q';
 		WR_CHAR();
 		play_note('q', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 		
 		LCD = 'w';
 		WR_CHAR();
 		play_note('w', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		LCD = 'e';
 		WR_CHAR();
 		play_note('e', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		LCD = 'r';
 		WR_CHAR();
 		play_note('r', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		LCD = 't';
 		WR_CHAR();
 		play_note('t', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		LCD = 'y';
 		WR_CHAR();
 		play_note('y', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('u', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('i', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('o', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('p', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('a', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('s', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('d', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('f', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('g', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('h', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('j', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('k', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('l', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note(199, 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('z', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('x', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('c', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('v', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('b', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('n', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('m', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note('.', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 
 		play_note(';', 10);
-		delay_ms(3000);
+		delay_ms(1000);
 		// Entra em loop, esperando interrupcoes
 		/*
 		if (state == 3)
@@ -173,9 +173,9 @@ void main(void){
 void play_period_note(unsigned char index){
 
 	DAC = 0;
-	delay_notes(29);
+	delay_notes(index);
 	DAC = 255;
-	delay_notes(29);
+	delay_notes(index);
 	DAC = 0;
 }
 
@@ -277,9 +277,9 @@ void play_note(unsigned char note, unsigned int ms){
 
 	if (note_number >= 0){
 		unsigned int temp;
-		//for (temp = reps_notes[note_number]; temp > 0; --temp){
+		for (temp = reps_notes[note_number]; temp > 0; --temp){
 			play_period_note(note_number);
-		//}
+		}
 	}
 }
 

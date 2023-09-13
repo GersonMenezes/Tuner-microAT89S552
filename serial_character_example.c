@@ -9,27 +9,21 @@
 
 // Prototipos das fun??es
 void playComposer();
-
 void reset();
 void nop();
-
 void timer_config();
 void serial_config();
 void LCD_config();
 void INT_config(); // Configura interrup??es
-
 void aponta_line1(); // Linha 1 do LCD
 void aponta_line2();
 void write_lcd_string(char *str);
 void WR_CMD();
 void WR_CHAR();
-
 void isr_serial(void); // Interruption
-
 void delay_notes(unsigned char index);
 void delay_us(int us);
 void delay_ms(int ms);
-
 void play_period_note(unsigned char index);
 void play_note(unsigned char note, unsigned int ms);
 
@@ -61,12 +55,110 @@ void main(void){
 	serial_config();
 	LCD_config();
 	aponta_line1();
-	write_lcd_string(MSG2);
+	//write_lcd_string(MSG2);
 	aponta_line2();
-	write_lcd_string(MSG3);
+	//write_lcd_string(MSG3);
 	INT_config();
 
 	while (1){
+		LCD = 'q';
+		WR_CHAR();
+		play_note('q', 10);
+		delay_ms(3000);
+		
+		LCD = 'w';
+		WR_CHAR();
+		play_note('w', 10);
+		delay_ms(3000);
+
+		LCD = 'e';
+		WR_CHAR();
+		play_note('e', 10);
+		delay_ms(3000);
+
+		LCD = 'r';
+		WR_CHAR();
+		play_note('r', 10);
+		delay_ms(3000);
+
+		LCD = 't';
+		WR_CHAR();
+		play_note('t', 10);
+		delay_ms(3000);
+
+		LCD = 'y';
+		WR_CHAR();
+		play_note('y', 10);
+		delay_ms(3000);
+
+		play_note('u', 10);
+		delay_ms(3000);
+
+		play_note('i', 10);
+		delay_ms(3000);
+
+		play_note('o', 10);
+		delay_ms(3000);
+
+		play_note('p', 10);
+		delay_ms(3000);
+
+		play_note('a', 10);
+		delay_ms(3000);
+
+		play_note('s', 10);
+		delay_ms(3000);
+
+		play_note('d', 10);
+		delay_ms(3000);
+
+		play_note('f', 10);
+		delay_ms(3000);
+
+		play_note('g', 10);
+		delay_ms(3000);
+
+		play_note('h', 10);
+		delay_ms(3000);
+
+		play_note('j', 10);
+		delay_ms(3000);
+
+		play_note('k', 10);
+		delay_ms(3000);
+
+		play_note('l', 10);
+		delay_ms(3000);
+
+		play_note(199, 10);
+		delay_ms(3000);
+
+		play_note('z', 10);
+		delay_ms(3000);
+
+		play_note('x', 10);
+		delay_ms(3000);
+
+		play_note('c', 10);
+		delay_ms(3000);
+
+		play_note('v', 10);
+		delay_ms(3000);
+
+		play_note('b', 10);
+		delay_ms(3000);
+
+		play_note('n', 10);
+		delay_ms(3000);
+
+		play_note('m', 10);
+		delay_ms(3000);
+
+		play_note('.', 10);
+		delay_ms(3000);
+
+		play_note(';', 10);
+		delay_ms(3000);
 		// Entra em loop, esperando interrupcoes
 		/*
 		if (state == 3)
@@ -187,6 +279,110 @@ void play_note(unsigned char note, unsigned int ms){
 	}
 }
 
+// Funcao para atender a interrupcao serial
+void isr_serial(void) interrupt 4 {	
+	/*
+	char_temp = SBUF;
+	if (state == 1){ // Piano mode
+
+		if (char_temp == 27){
+			reset();
+		}
+		play_note(char_temp, 1000);
+	}
+	else if (state == 2){ // Composer mode
+
+		if (char_temp == 27){
+			reset();
+		}
+		else if (countNotes == 40 || char_temp == 13){
+			playComposer();
+			countNotes = 0;
+			state = 3;
+		}
+		else{
+			notes[countNotes] = char_temp;
+			countNotes++;
+		}
+	}
+	else{ // Menu mode
+
+		if (char_temp == '1'){
+
+			aponta_line1();
+			write_lcd_string(MSG4);
+			aponta_line2();
+			write_lcd_string(MSG5);
+			state = 1;
+		}
+		else if (char_temp == '2'){
+			aponta_line1();
+			write_lcd_string(MSG6);
+			aponta_line2();
+			write_lcd_string(MSG7);
+			aponta_line1();
+			write_lcd_string(MSG6);
+			state = 2;
+		}
+		else{
+			reset();
+		}
+	}
+	*/
+	RI = 0; // Limpa a flag de interrupcao serial
+}
+
+void playComposer(){
+	char *str = notes;
+	char note;
+	char time;
+
+	//IE = 0x00; // Desliga interrup��o serial
+
+	while (*str){
+		note = *str++;
+		time = *str++;
+		play_note(note, time);
+	}
+	state = 0;
+	//IE = 0x90; // Liga interrup��o serial
+}
+
+// ---------------------- Delays ---------------------------
+
+void delay_notes(unsigned char index){
+	TMOD = 0x01;
+	TH0 = f_Htimer[index];
+	TL0 = f_Ltimer[index];
+	TR0 = 1;
+	while (!TF0);
+	TF0 = 0;
+	TR0 = 0;
+}
+
+void delay_ms(int ms){
+	TMOD |= 0x01;
+	while (ms){
+		TL0 = 0x65;
+		TH0 = 0xFC;
+		TR0 = 1;
+		while (!TF0);
+		TF0 = 0;
+		TR0 = 0;
+		ms--;
+	}
+}
+
+void delay_us(int us){
+	int i;
+	for(i = 0; i < us; ++i){
+	}
+}
+
+void nop(){}
+
+// -- LCD functions
+
 void aponta_line1(){
 
 	LCD = 0x01; // Limpa o display.
@@ -240,75 +436,6 @@ void write_lcd_string(char *str){
 	WR_CMD();
 }
 
-// Funcao para atender a interrupcao serial
-void isr_serial(void) interrupt 4 {	
-	
-	char_temp = SBUF;
-	
-	if (state == 1){ // Piano mode
-
-		if (char_temp == 27){
-			reset();
-		}
-		play_note(char_temp, 1000);
-	}
-	else if (state == 2){ // Composer mode
-
-		if (char_temp == 27){
-			reset();
-		}
-		else if (countNotes == 40 || char_temp == 13){
-			playComposer();
-			countNotes = 0;
-			state = 3;
-		}
-		else{
-			notes[countNotes] = char_temp;
-			countNotes++;
-		}
-	}
-	else{ // Menu mode
-
-		if (char_temp == '1'){
-
-			aponta_line1();
-			write_lcd_string(MSG4);
-			aponta_line2();
-			write_lcd_string(MSG5);
-			state = 1;
-		}
-		else if (char_temp == '2'){
-			aponta_line1();
-			write_lcd_string(MSG6);
-			aponta_line2();
-			write_lcd_string(MSG7);
-			aponta_line1();
-			write_lcd_string(MSG6);
-			state = 2;
-		}
-		else{
-			reset();
-		}
-	}
-	RI = 0; // Limpa a flag de interrupcao serial
-}
-
-void playComposer(){
-	char *str = notes;
-	char note;
-	char time;
-
-	//IE = 0x00; // Desliga interrup��o serial
-
-	while (*str){
-		note = *str++;
-		time = *str++;
-		play_note(note, time);
-	}
-	state = 0;
-	//IE = 0x90; // Liga interrup��o serial
-}
-
 //---------------------------- Configura ----------------------------------------------------
 
 void timer_config(){
@@ -349,36 +476,3 @@ void LCD_config(){
 void INT_config(){
 	IE = 0x90;
 }
-
-// ---------------------- Delays ---------------------------
-
-void delay_notes(unsigned char index){
-	TMOD = 0x01;
-	TH0 = f_Htimer[index];
-	TL0 = f_Ltimer[index];
-	TR0 = 1;
-	while (!TF0);
-	TF0 = 0;
-	TR0 = 0;
-}
-
-void delay_ms(int ms){
-	TMOD |= 0x01;
-	while (ms){
-		TL0 = 0x65;
-		TH0 = 0xFC;
-		TR0 = 1;
-		while (!TF0);
-		TF0 = 0;
-		TR0 = 0;
-		ms--;
-	}
-}
-
-void delay_us(int us){
-	int i;
-	for(i = 0; i < us; ++i){
-	}
-}
-
-void nop(){}

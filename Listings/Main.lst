@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   MAIN                                                              09/12/2023 15:34:18 PAGE 1   
+C51 COMPILER V9.60.7.0   MAIN                                                              09/12/2023 22:32:58 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
@@ -9,107 +9,292 @@ COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE Main.c OPTIMIZE(8,SPEED) BROWSE 
 line level    source
 
    1          /*
-   2          
-   3          #include <at89x52.h>
-   4          #include <string.h>
-   5          #include <math.h>
-   6          
-   7          #define CS      P1_0
-   8          #define CLK     P1_1
-   9          #define DO      P1_2
-  10          #define LCD     P2
-  11          #define EN      P3_6
-  12          #define RS      P3_7
-  13          #define PI      3.14159265359
-  14          
-  15          void delay_us(int us);
-  16          void delay_ms(int ms);
-  17          
-  18          void main(void)
-  19          {
-  20            
-  21            int sinal = 1;
-  22            unsigned char VD = 0;
-  23            float VA = 0;
-  24            float out = 0;
-  25            int tmp = 1;
-  26            int delay = 0;
-  27            int tensao = 0;
-  28            CS = 1;
-  29            
-  30            delay = 10; //ms
-  31            tensao = 1;
-  32            /*
-  33            while(1){
-  34              
-  35                LCD = tmp;
-  36                if(tmp > 50){
-  37                  sinal = sinal * (-1);
-  38                  tmp = 50;
-  39                }else if(tmp < 1){
-  40                  sinal = sinal * (-1);
-  41                  tmp = 1;
-  42                }
-  43                tmp = tmp + (1 * sinal);
-  44                delay_us(100);
-  45            }*/
-  46            /*    
-  47            while(1){
-  48              
-  49              LCD = 0;
-  50              delay_us(500);
-  51              LCD = 10;
-  52              delay_us(500);
-  53              LCD = 50;
+   2          #include <at89x52.h>
+   3          #include <string.h>
+   4          #include <math.h>
+   5          
+   6          #define DAC P0
+   7          #define LCD P2
+   8          #define EN P3_7   // LCD enable
+   9          #define RS P3_6   // LCD instruction or dataa
+  10          #define count R5
+  11          
+  12          // Protï¿½tipos das funï¿½ï¿½es
+  13          void timer_config();
+  14          void serial_config();
+  15          void LCD_config();
+  16          void INT_config();  // Configura interrupï¿½ï¿½es
+  17          void aponta_line1(); // Linha 1 do LCD
+  18          void aponta_line2();
+  19          void write_lcd_string(char *str);
+  20          void WR_CMD();
+  21          void WR_CHAR();
+  22          void isr_serial(void);  // Interruption
+  23          void delay_us(int us);
+  24          void delay_ms(int ms);
+  25          void DELAY_5US();
+  26          void DELAY_5MS();
+  27          void DELAY_25MS();
+  28          void nop();
+  29          
+  30          // Variï¿½veis globais
+  31          int count = 0;
+  32          char MSG1[] = "Welcome...";
+  33          char MSG2[] = "Choose mode...";
+  34          char MSG3[] = "1 Piano 2 Compos";
+  35          unsigned char char_temp;
+  36          
+  37          // Funï¿½ï¿½o principal
+  38          void main(void) {
+  39            
+  40            timer_config();
+  41            serial_config();
+  42            LCD_config();
+  43            aponta_line1();
+  44            write_lcd_string(MSG1);
+  45            aponta_line1();
+  46            write_lcd_string(MSG2);
+  47            aponta_line2();
+  48            write_lcd_string(MSG3);
+  49            INT_config();
+  50          
+  51            // Entra em loop, esperando interrupï¿½ï¿½es
+  52            while (1) {
+  53              DAC = 0;
   54              delay_us(500);
-C51 COMPILER V9.60.7.0   MAIN                                                              09/12/2023 15:34:18 PAGE 2   
+C51 COMPILER V9.60.7.0   MAIN                                                              09/12/2023 22:32:58 PAGE 2   
 
-  55              LCD = 60;
+  55              DAC = 255;
   56              delay_us(500);
-  57              LCD = 70;
-  58              delay_us(500);
+  57            }
+  58          }
   59          
-  60            }*/
-  61            /*
-  62            while(1){
-  63              
-  64              //out = sin(2*PI*60*tmp*delay/1000);
-  65              //LCD = (unsigned char)(127 + 127*out);
-  66              LCD = (unsigned char) tensao;
-  67              tensao = tensao + (1*sinal);
-  68              //tmp = tmp+1;
-  69              delay_us((delay*1000)/500);
-  70              
-  71              // Período
-  72              if(tensao > 254 || tensao < 1){
-  73                sinal = sinal * (-1);
-  74              }
-  75            }
-  76          }*/
-  77          
-  78          
-  79          /*
-  80          
-  81          void delay_us(int us)
-  82          {
-  83            int i;
-  84            for(i = 0; i < us; i++){}
-  85          }
-  86          
-  87          void delay_ms(int ms){
-  88            TMOD |= 0x01;
-  89            
-  90            while(ms){
-  91              TL0 = 0x65;
-  92              TH0 = 0xFC;
-  93              TR0 = 1;
-  94              while(!TF0);
-  95              TF0 = 0;
-  96              TR0 = 0;
-  97              ms--;
-  98            }
-  99          }
- 100          */
+  60          void aponta_line1(){
+  61            LCD = 0x01;     // Limpa o display.
+  62              WR_CMD();
+  63            LCD = 0x80;     // Cursor para a primeira linha    
+  64            WR_CMD();
+  65          }
+  66          
+  67          void aponta_line2(){
+  68            
+  69            LCD = 0xC0; //Cursor para a segunda linha
+  70            WR_CMD();
+  71            LCD = 0x0F; //Cursor Piscando
+  72            WR_CMD();
+  73          }
+  74          
+  75          void WR_CMD(){
+  76            
+  77            RS = 0;
+  78            nop();
+  79            EN = 1;
+  80            DELAY_5US();
+  81            EN = 0;
+  82            DELAY_5MS();
+  83          }
+  84          
+  85          void WR_CHAR(){
+  86            
+  87            RS = 1;
+  88            nop();
+  89            EN = 1;
+  90            DELAY_5US();
+  91            EN = 0;
+  92            delay_ms(250);
+  93          }
+  94          
+  95          
+  96          // Funï¿½ï¿½o para escrever uma string na LCD
+  97          void write_lcd_string(char *str) {
+  98            while (*str) {
+  99              LCD = (unsigned char) *str++;
+ 100              WR_CHAR();
+ 101            }
+ 102          }
+ 103          
+ 104          // Funï¿½ï¿½o para atender a interrupï¿½ï¿½o serial
+ 105          void isr_serial(void)  interrupt 4 {
+ 106            // Verifica se a interrupï¿½ï¿½o foi causada por um caractere recebido
+ 107            
+ 108            // Lï¿½ o caractere recebido da serial
+ 109              char_temp = SBUF;
+ 110              // Escreve o caractere recebido na LCD
+ 111              LCD = char_temp;
+ 112              WR_CHAR();
+ 113              // Verifica se o contador de caracteres atingiu 16
+ 114              if (count == 15) {
+ 115                // Liga o scroll
+ 116                LCD = 0x07;
+C51 COMPILER V9.60.7.0   MAIN                                                              09/12/2023 22:32:58 PAGE 3   
+
+ 117                WR_CMD();
+ 118                
+ 119              }
+ 120              // Verifica se o contador de caracteres atingiu 40
+ 121              if (count == 39) {
+ 122                // Reseta o contador e o display
+ 123                count = 0;
+ 124                LCD_config();
+ 125                aponta_line1();
+ 126                write_lcd_string(MSG1);
+ 127                aponta_line2();
+ 128                RI = 0;
+ 129                return;
+ 130              }
+ 131              if(char_temp == '1'){
+ 132                count = 0;
+ 133                LCD_config();
+ 134                aponta_line1();
+ 135                write_lcd_string(MSG1);
+ 136                aponta_line2();
+ 137                RI = 0;
+ 138              }
+ 139          
+ 140              
+ 141            
+ 142            if(char_temp == "q"){
+ 143              play_note();
+ 144            }else if(char_temp == "w"){
+ 145              play_note();
+ 146            }else if(char_temp == "e"){
+ 147              play_note();
+ 148            }else if(char_temp == "r"){
+ 149              play_note();
+ 150            }else if(char_temp == "t"){
+ 151              play_note();
+ 152            }else if(char_temp == "y"){
+ 153              play_note();
+ 154            }else if(char_temp == "u"){
+ 155              play_note();
+ 156            }else if(char_temp == "i"){
+ 157              play_note();
+ 158            }else if(char_temp == "o"){
+ 159              play_note();
+ 160            }else if(char_temp == "p"){
+ 161              play_note();
+ 162            }else if(char_temp == "a"){
+ 163              play_note();
+ 164            }else if(char_temp == "s"){
+ 165              play_note();
+ 166            }else if(char_temp == "d"){
+ 167              play_note();
+ 168            }else if(char_temp == "f"){
+ 169              play_note();
+ 170            }else if(char_temp == "g"){
+ 171              play_note();
+ 172            }else if(char_temp == "h"){
+ 173              play_note();
+ 174            }else if(char_temp == "j"){
+ 175              play_note();
+ 176            }else if(char_temp == "k"){
+ 177              play_note();
+ 178            }else if(char_temp == "l"){
+C51 COMPILER V9.60.7.0   MAIN                                                              09/12/2023 22:32:58 PAGE 4   
+
+ 179              play_note();
+ 180            }else if(char_temp == "Ã§"){
+ 181              play_note();
+ 182            }else if(char_temp == "z"){
+ 183              play_note();
+ 184            }else if(char_temp == "x"){
+ 185              play_note();
+ 186            }else if(char_temp == "c"){
+ 187              play_note();
+ 188            }else if(char_temp == "v"){
+ 189              play_note();
+ 190            }else if(char_temp == "b"){
+ 191              play_note();
+ 192            }else if(char_temp == "n"){
+ 193              play_note();
+ 194            }else if(char_temp == "m"){
+ 195              play_note();
+ 196            }
+ 197          
+ 198              // Incrementa o contador de caracteres
+ 199              count++;
+ 200          
+ 201              // Limpa a flag de interrupï¿½ï¿½o serial
+ 202              RI = 0;
+ 203          }
+ 204          //---------------------------- Configura ----------------------------------------------------
+ 205          void timer_config(){
+ 206          
+ 207              TMOD = 0x20;    // Configura T/C 1 em modo 8 bits com recarga.
+ 208              TH1 = 253;
+ 209              TL1 = 253;
+ 210              TR1 = 1;
+ 211          }
+ 212          
+ 213          void serial_config() {
+ 214              PCON = 0x80;    // SMOD = 1.
+ 215              SCON = 0x50;    // Modo 1, recepï¿½ï¿½o habilitada (REN = 1).
+ 216          }
+ 217          
+ 218          void LCD_config() {
+ 219              LCD = 0x38;     // Define a matriz 5x7 pontos.
+ 220              WR_CMD();
+ 221              LCD = 0x06;     // Deslocamento do cursor E->D.
+ 222              WR_CMD();
+ 223              LCD = 0x0E;     // Cursor fixo.
+ 224              WR_CMD();
+ 225              LCD = 0x01;     // Limpa o display.
+ 226              WR_CMD();
+ 227              LCD = 0x02;     // Vai para a primeira linha (opcional).
+ 228              WR_CMD();
+ 229          }
+ 230          
+ 231          void INT_config(){
+ 232            
+ 233            IE = 0x90;
+ 234          }
+ 235          // ---------------------- Delays ---------------------------
+ 236          
+ 237          void DELAY_5US() {
+ 238              nop();
+ 239              nop();
+ 240              nop();
+C51 COMPILER V9.60.7.0   MAIN                                                              09/12/2023 22:32:58 PAGE 5   
+
+ 241          }
+ 242          
+ 243          void DELAY_5MS() {
+ 244              unsigned char R1, R2;
+ 245              for (R1 = 27; R1 > 0; R1--) {
+ 246                  for (R2 = 255; R2 > 0; R2--);
+ 247              }
+ 248          }
+ 249          
+ 250          void DELAY_25MS() {
+ 251              unsigned char R3;
+ 252              for (R3 = 5; R3 > 0; R3--) {
+ 253                  DELAY_5MS();
+ 254              }
+ 255          }
+ 256          
+ 257          void delay_us(int us)
+ 258          {
+ 259            int i;
+ 260            for(i = 0; i < us; i++){}
+ 261          }
+ 262          
+ 263          void delay_ms(int ms){
+ 264            TMOD |= 0x01;
+ 265            
+ 266            while(ms){
+ 267              TL0 = 0x65;
+ 268              TH0 = 0xFC;
+ 269              TR0 = 1;
+ 270              while(!TF0);
+ 271              TF0 = 0;
+ 272              TR0 = 0;
+ 273              ms--;
+ 274            }
+ 275          }
+ 276          
+ 277          void nop(){
+ 278          }
+ 279          */
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE

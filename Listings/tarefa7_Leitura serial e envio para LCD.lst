@@ -1,4 +1,4 @@
-A51 MACRO ASSEMBLER  TAREFA7_LEITURA_SERIAL_E_ENVIO_PARA_LCD                              09/12/2023 15:34:18 PAGE     1
+A51 MACRO ASSEMBLER  TAREFA7_LEITURA_SERIAL_E_ENVIO_PARA_LCD                              09/12/2023 21:48:39 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
@@ -65,7 +65,7 @@ LOC  OBJ            LINE     SOURCE
                       55     
                       56     
                       57     
-A51 MACRO ASSEMBLER  TAREFA7_LEITURA_SERIAL_E_ENVIO_PARA_LCD                              09/12/2023 15:34:18 PAGE     2
+A51 MACRO ASSEMBLER  TAREFA7_LEITURA_SERIAL_E_ENVIO_PARA_LCD                              09/12/2023 21:48:39 PAGE     2
 
                       58     
                       59     
@@ -133,7 +133,7 @@ LOC  OBJ            LINE     SOURCE
                      121     
                      122     
                      123     
-A51 MACRO ASSEMBLER  TAREFA7_LEITURA_SERIAL_E_ENVIO_PARA_LCD                              09/12/2023 15:34:18 PAGE     3
+A51 MACRO ASSEMBLER  TAREFA7_LEITURA_SERIAL_E_ENVIO_PARA_LCD                              09/12/2023 21:48:39 PAGE     3
 
                      124     
                      125     
@@ -174,7 +174,7 @@ LOC  OBJ            LINE     SOURCE
                      160     
                      161     
 *** WARNING #A41 IN 161 (tarefa7_Leitura serial e envio para LCD.asm, LINE 161): MISSING 'END' STATEMENT
-A51 MACRO ASSEMBLER  TAREFA7_LEITURA_SERIAL_E_ENVIO_PARA_LCD                              09/12/2023 15:34:18 PAGE     4
+A51 MACRO ASSEMBLER  TAREFA7_LEITURA_SERIAL_E_ENVIO_PARA_LCD                              09/12/2023 21:48:39 PAGE     4
 
 SYMBOL TABLE LISTING
 ------ ----- -------

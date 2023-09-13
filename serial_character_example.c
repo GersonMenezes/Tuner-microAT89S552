@@ -182,94 +182,98 @@ void play_period_note(unsigned char index){
 void play_note(unsigned char note, unsigned int ms){
 
 	int note_number = -1;
-	if (note == 'q'){
-		note_number = 0;
+	switch (note) {
+		case 'q':
+			note_number = 0;
+			break;
+		case 'w':
+			note_number = 1;
+			break;
+		case 'e':
+			note_number = 2;
+			break;
+		case 'r':
+			note_number = 3;
+			break;
+		case 't':
+			note_number = 4;
+			break;
+		case 'y':
+			note_number = 5;
+			break;
+		case 'u':
+			note_number = 6;
+			break;
+		case 'i':
+			note_number = 7;
+			break;
+		case 'o':
+			note_number = 8;
+			break;
+		case 'p':
+			note_number = 9;
+			break;
+		case 'a':
+			note_number = 10;
+			break;
+		case 's':
+			note_number = 11;
+			break;
+		case 'd':
+			note_number = 12;
+			break;
+		case 'f':
+			note_number = 13;
+			break;
+		case 'g':
+			note_number = 14;
+			break;
+		case 'h':
+			note_number = 15;
+			break;
+		case 'j':
+			note_number = 16;
+			break;
+		case 'k':
+			note_number = 17;
+			break;
+		case 'l':
+			note_number = 18;
+			break;
+		case 199:
+			note_number = 19;
+			break;
+		case 'z':
+			note_number = 20;
+			break;
+		case 'x':
+			note_number = 21;
+			break;
+		case 'c':
+			note_number = 22;
+			break;
+		case 'v':
+			note_number = 23;
+			break;
+		case 'b':
+			note_number = 24;
+			break;
+		case 'n':
+			note_number = 25;
+			break;
+		case 'm':
+			note_number = 26;
+			break;
+		case ',':
+			note_number = 27;
+			break;
+		case '.':
+			note_number = 28;
+			break;
+		default:
+			// Handle the case where note does not match any of the above values
+			break;
 	}
-	else if (note == 'w'){
-		note_number = 1;
-	}
-	else if (note == 'e'){
-		note_number = 2;
-	}
-	else if (note == 'r'){
-		note_number = 3;
-	}
-	else if (note == 't'){
-		note_number = 4;
-	}
-	else if (note == 'y'){
-		note_number = 5;
-	}
-	else if (note == 'u'){
-		note_number = 6;
-	}
-	else if (note == 'i'){
-		note_number = 7;
-	}
-	else if (note == 'o'){
-		note_number = 8;
-	}
-	else if (note == 'p'){
-		note_number = 9;
-	}
-	else if (note == 'a'){
-		note_number = 10;
-	}
-	else if (note == 's'){
-		note_number = 11;
-	}
-	else if (note == 'd'){
-		note_number = 12;
-	}
-	else if (note == 'f'){
-		note_number = 13;
-	}
-	else if (note == 'g'){
-		note_number = 14;
-	}
-	else if (note == 'h'){
-		note_number = 15;
-	}
-	else if (note == 'j'){
-		note_number = 16;
-	}
-	else if (note == 'k'){
-		note_number = 17;
-	}
-	else if (note == 'l'){
-		note_number = 18;
-	}
-	else if (note == 199){
-		note_number = 19;
-	}
-	else if (note == 'z'){
-		note_number = 20;
-	}
-	else if (note == 'x'){
-		note_number = 21;
-	}
-	else if (note == 'c'){
-		note_number = 22;
-	}
-	else if (note == 'v'){
-		note_number = 23;
-	}
-	else if (note == 'b'){
-		note_number = 24;
-	}
-	else if (note == 'n'){
-		note_number = 25;
-	}
-	else if (note == 'm'){
-		note_number = 26;
-	}
-	else if (note == ','){
-		note_number = 27;
-	}
-	else if (note == '.'){
-		note_number = 28;
-	}
-	else{}
 
 	if (note_number >= 0){
 		unsigned int temp;

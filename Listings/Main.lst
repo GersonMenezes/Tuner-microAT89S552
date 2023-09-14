@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   MAIN                                                              09/12/2023 15:34:18 PAGE 1   
+C51 COMPILER V9.60.7.0   MAIN                                                              09/13/2023 17:28:08 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   52              delay_us(500);
   53              LCD = 50;
   54              delay_us(500);
-C51 COMPILER V9.60.7.0   MAIN                                                              09/12/2023 15:34:18 PAGE 2   
+C51 COMPILER V9.60.7.0   MAIN                                                              09/13/2023 17:28:08 PAGE 2   
 
   55              LCD = 60;
   56              delay_us(500);
